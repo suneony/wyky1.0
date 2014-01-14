@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=title%>-打造个性化考研网站</title>
+	<link rel='stylesheet' type="text/css" href='/stylesheets/bootstrap.css'/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fileupload-ui.css"/>
+	<style type="text/css">
+		.navbar{
+			background-color:#000000;
+		}
+		#body_container{
+			margin-top:50px;
+			width:100%;
+			background-image:url('/images/background.png');
+
+		}
+		.dropdown-menu{
+			width:250px;
+		}
+		.form-horizontal{
+			margin-left:5px;
+			width:115%;
+		}
+		#msg_box{
+			z-index:100;
+			border:2px #CCC solid;
+			width:10%;
+			height:30px;
+			margin:0px 45%;
+			position:fixed;
+			visibility:hidden;
+			text-align:center;
+			background-color:#333333;
+		}
+		.w_main{
+			margin:0px auto;
+			width:1024px;
+			height:800px;
+
+		}
+		.w_main_container{
+			float:left;
+			display:inline;
+		}
+		.w_main_left{
+			width:150px;
+			height:800px;
+			position:fixed;
+			background-color:#999999;
+		}
+		.w_main_right{
+			width:150px;
+			height:800px;
+			position:fixed;
+			background-color:#999999;
+		}
+		.w_main_middle{
+			width:724px;
+			height:800px;
+			position:static;
+			margin-left:150px;
+			background-color:#ffffff;
+		}
+		.register_body{
+			margin:60px auto;
+			width:800px;
+			height:800px;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-fixed-top navbar-default" role="navigation">
+		<div class="navbar-header" style="margin-left:100px;">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		      <span class="sr-only">Toggle navigation</span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		    </button>
+		    <a class="navbar-brand" href="/">考研网</a>
+		</div>
+		<div class="collapse navbar-collapse" style="margin-left:200px;" id="bs-example-navbar-collapse-1">
+		    <ul class="nav navbar-nav">
+		      <form class="navbar-form navbar-left" role="search">
+		      <div class="form-group">
+		        <input type="text" class="form-control" placeholder="Search" style="border-right-style:none;">
+		      </div>
+		      <button type="submit" class="btn btn-default" style="border-left-style:none;margin-left:-10px"><i class="icon-search"></i></button>
+		    </form>
+		    <li><a href="#" id="href_quesition">我要提问</a></li>
+		    <li><a href="#" id="href_upload" class="" data-toggle="modal" data-target="#myModal">上传资料</a></li>
+		    </ul>
+		    <ul class="nav navbar-nav navbar-right" id="userinfo" style="margin-right:100px;">
+		    <%if(!locals.vary){%>
+		      <li class="dropdown">
+		        <a href="/" class="dropdown-toggle" data-toggle="dropdown">登录<b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		          <li>
+		          		<form class="form-horizontal" role="form" method="post" action="/login">
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="text" class="form-control" id="login_username" name="login_username"placeholder="Username">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="password" class="form-control" id="login_password" name="login_password" placeholder="Password">
+						    </div>
+						  </div>
+						  <div class="form-group" style="margin-left:-75px">
+						    <div class="col-sm-offset-2 col-sm-10">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox"> 记住我
+						        </label>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="form-group" style="margin-right:-750px">
+						    <div class="col-sm-offset-2 col-sm-10">
+						      <button type="button" class="btn btn-default" id="btn_login">登录</button>
+						    </div>
+						  </div>
+						</form>
+					</li>
+		        </ul>
+		      </li>
+		      <li class="dropdown" style="margin-right:15px">
+		        <a href="/" class="dropdown-toggle" data-toggle="dropdown">注册<b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		          <li>
+		          		<form class="form-horizontal" id="reg_form" role="form" method="post" action="/reg">
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="text" class="form-control" id="username" name="reg_username"placeholder="Username">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="email" class="form-control" id="reg_email" name="reg_email" placeholder="Email">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="password" class="form-control" id="reg_password" name="reg_password" placeholder="Password">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-sm-10">
+						      <input type="password" class="form-control" id="reg_confirm" name="reg_confirm" placeholder="Confirm">
+						    </div>
+						  </div>
+
+						  <div class="form-group">
+						  	<div class="col-sm-10">
+						  	<select name="course" id="select_course_first" style="width:100%;">
+						  		<option value="" value="一级学科">一级学科</option>
+						  	</select>
+						  	<select name="course" id="select_course_second" style="width:100%;margin:10px auto;">
+						  		<option value="二级学科">二级学科</option>
+						  	</select>
+						  	</div>
+						  </div>
+						  <div class="form-group" style="margin-right:-750px">
+						    <div class="col-sm-offset-2 col-sm-10">
+						      <button type="button" class="btn btn-default" id="btn_reg">注册</button>
+						    </div>
+						  </div>
+						</form>
+		          </li>
+		        </ul>
+		      </li>
+		      <%}else{%>
+		     	<li class="dropdown" style="margin-right:15px">
+			        <a href="/logout" class="dropdown-toggle" data-toggle="dropdown"><img src="/images/head1.jpg" alt="" class="img-circle" style="width:18px;height:18px;">&nbsp&nbsp<%=vary.getUsername()%><b class="caret"></b></a>
+			        <ul class="dropdown-menu" style="width:0px">
+			          <li><a href="/"><i class="icon-user"></i>&nbsp&nbsp我的主页</a></li>
+			          <li class="divider"></li>
+			          <li><a href="/"><i class="icon-envelope"></i>&nbsp&nbsp私信</a></li>
+			          <li class="divider"></li>
+			          <li><a href="/"><i class="icon-cog"></i>&nbsp&nbsp设置</a></li>
+			          <li class="divider"></li>
+			          <li><a href="/" id="btn_logout"><i class="icon-off"></i>&nbsp&nbsp退出登录</a></li>
+			        </ul>
+		      </li>
+		      <%}%>
+		    </ul>
+  		</div>
+	</nav>
+	<div id="msg_box" style="">
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <%if(!locals.vary){%>
+	        <h4 class="modal-title" id="myModalLabel">请先登录</h4>
+	        <%}else{%>
+	        <h4 class="modal-title" id="myModalLabel">上传文件</h4>
+	        <%}%>
+	      </div>
+	      <div class="modal-body">
+	        <span class="btn btn-success fileinput-button" id="btn_fileupload" style="visibility:hidden;margin-top:10px;width:100px;height:30px;" >
+	        	<i class="icon-plus icon-white"></i>
+	        	<span>选择文件</span>
+	        	<input id="fileupload" type="file" name="fileupload" action="/fileupload" data-url="/fileupload" multiple>
+	    	</span>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="container" id="body_container">
+	
+	<%-body %>
+	</div>
+	<script src="/javascripts/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery.ui.widget.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery.iframe-transport.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery.fileupload.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8" async defer>
+	 function msg_tip(message)
+	 {
+	 	$("#msg_box").css("visibility","visible");
+	 	var text=$("<p id='msg_info' style='color:#fff;margin-top:3px;'>"+message+"</p>");
+	 	$("#msg_box").append(text);
+	 	setTimeout(function(){
+	 		$("#msg_info").remove();
+	 		$("#msg_box").css("visibility","hidden");
+
+	 	}, 1000);
+	 }
+	</script>
+	<script type="text/javascript" charset="utf-8">
+		$("#btn_login").click(function(){
+			var login_username=$("input[name='login_username']").val();
+			var login_password=$("input[name='login_password']").val();
+			$.post("/login", { Action: "post", login_username: login_username,login_password:login_password },
+			function (data, textStatus){
+				if(data.status==1)//success
+				{
+					msg_tip("登录成功");
+					window.location.reload(true);
+				}
+				else if(data.result.code==1)//login failed
+				{
+					msg_tip("用户名错误");
+
+				}
+				else if(data.result.code==2)
+				{
+					msg_tip("密码不正确");
+				}
+			}, "json");
+		});
+		$("#btn_reg").click(function(){
+			var reg_password=$("input[name='reg_password']").val();
+	 		var reg_confirm=$("input[name='reg_confirm']").val();
+	 		var reg_username=$("input[name='reg_username']").val();
+	 		var first_degree_course=$("#select_course_first").val();
+	 		var second_degree_course=$("#select_course_second").val();
+	 		if(reg_password!=reg_confirm)
+	 		{
+	 			msg_tip("密码不一致");
+	 		}
+	 		else if(first_degree_course=="一级学科"||second_degree_course=="二级学科")
+	 		{
+	 			msg_tip("请选择专业");
+	 		}else
+	 		{
+	 			$.post('/reg',{ Action: "post", reg_username: reg_username,reg_password:reg_password,first_degree_course:first_degree_course,second_degree_course:second_degree_course },
+	 				function (data, textStatus) {
+	 				if(data.status==1)//success
+					{
+						msg_tip("登录成功");
+						window.location.reload(true);
+					}
+	 			},"json");
+			
+			}
+		});
+		$("#btn_logout").click(function(){
+			$.post('/logout',{Action:"post"},function(data,textStatus){
+				if(data.status==1)
+				{
+					msg_tip("登出成功");
+						window.location.reload(true);
+				}
+			},"json");
+		});
+		$("#href_upload").click(function(){
+			$.post('/upload',{Action:"post"},function(data,textStatus){
+				if(data.status==0)
+				{
+					msg_tip("请先登录");
+				}
+				else if(data.status==1)
+				{
+					
+					$("#btn_fileupload").css("visibility","visible");
+				}
+				else
+				{
+					msg_tip("未接受到数据");
+				}
+			});
+		});
+		$(function(){
+			$('#fileupload').fileupload({
+		        autoUpload: true,//是否自动上传
+		        url: "/fileupload",//上传地址
+		        type:"post",
+		        dataType: 'json',
+		        done: function (e, data) {//设置文件上传完毕事件的回调函数
+		        	var flag=data.result.status;
+		        	if(flag==1)
+		        	{
+		        		msg_tip("文件上传成功");
+		        	}
+		        	else if(flag==0)
+		        	{
+		        		msg_tip("文件上传失败");
+		        	}
+		        	else if(flag==2)
+		        	{
+		        		msg_tip("请选择文件");
+		        	}
+		        	alert("upload ok");
+		        },
+		        progressall: function (e, data) {//设置上传进度事件的回调函数
+		     		//do something to updata the UI
+		        }
+		    });
+	    });
+	    $(document).ready(function(){
+	    	$.getJSON("/json/firstDegreeCourse.json",function(data){
+	    		$.each(data,function(infoIndex,info){
+	    			$("#select_course_first").append("<option value='"+info["name"]+"'>"+info["name"]+"</option>");
+	    		});
+	    	});
+	    });
+	    $("#select_course_first").change(function(){
+	    	$("#select_course_second option[value!='二级学科']").remove();
+	    	var firstDegreeCourse=$("#select_course_first").val();
+	    	$.getJSON("/json/secondDegreeCourse.json",function(data){
+	    		$.each(data,function(infoIndex,info){
+	    			if(info["fatherName"]==firstDegreeCourse)
+	    			$("#select_course_second").append("<option value='"+info["name"]+"'>"+info["name"]+"</option>");
+	    		});
+	    	});
+	    });
+	</script>
+	<script src="" type="text/javascript" charset="utf-8" async defer>
+	
+	</script>
+</body>
+</html>
